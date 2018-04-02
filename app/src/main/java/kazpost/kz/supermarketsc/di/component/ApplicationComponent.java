@@ -22,10 +22,12 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import kazpost.kz.supermarketsc.App;
+import kazpost.kz.supermarketsc.data.SupermarketRepository;
 import kazpost.kz.supermarketsc.data.network.NetworkService;
 import kazpost.kz.supermarketsc.di.ApplicationContext;
 import kazpost.kz.supermarketsc.di.module.ApplicationModule;
 import kazpost.kz.supermarketsc.ui.scan.ScanActivity;
+import kazpost.kz.supermarketsc.ui.scan.ScanViewModel;
 
 /**
  * Created by janisharali on 27/01/17.
@@ -45,10 +47,11 @@ public interface ApplicationComponent {
 
     Application application();
 
-//    SupermarketRepository getSupermarketRepository();
+    SupermarketRepository getSupermarketRepository();
 
     NetworkService getNetworkService();
 
 //    void inject(ScanActivity scanActivity);
 
+    void inject(ScanViewModel scanViewModel);
 }

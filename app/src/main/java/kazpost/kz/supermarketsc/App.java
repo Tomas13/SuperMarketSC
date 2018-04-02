@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 
 import kazpost.kz.supermarketsc.di.component.ApplicationComponent;
+import kazpost.kz.supermarketsc.di.component.DaggerApplicationComponent;
 import kazpost.kz.supermarketsc.di.module.ApplicationModule;
 
 /**

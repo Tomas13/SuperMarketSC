@@ -24,6 +24,7 @@ public class ScanViewModel extends ViewModel {
         this.supermarketRepository = supermarketRepository;
     }
 
+
     public static final String TAG = ScanViewModel.class.getSimpleName();
 
     private MutableLiveData<String> mData = new MutableLiveData<>();

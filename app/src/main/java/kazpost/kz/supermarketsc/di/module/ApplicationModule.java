@@ -17,7 +17,6 @@ package kazpost.kz.supermarketsc.di.module;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -80,6 +79,13 @@ public class ApplicationModule {
         return AppConstants.PREF_NAME;
     }
 
+
+    @Provides
+    @Singleton
+    PreferencesHelper providePreferencesHelper(AppPreferencesHelper appPreferencesHelper) {
+        return appPreferencesHelper;
+    }
+
     @Provides
     @Singleton
     Repo provideRepository(SupermarketRepository supermarketRepository) {
@@ -102,12 +108,6 @@ public class ApplicationModule {
 //    RealmHelper provideRealmHelper(RealmHelper appRealmHelper) {
 //        return appRealmHelper;
 //    }
-
-    @Provides
-    @Singleton
-    PreferencesHelper providePreferencesHelper(AppPreferencesHelper appPreferencesHelper) {
-        return appPreferencesHelper;
-    }
 
 
     @Provides

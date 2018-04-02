@@ -2,11 +2,9 @@ package kazpost.kz.supermarketsc.ui.scan;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,8 +18,6 @@ import com.baozi.Zxing.ZXingConstants;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import java.util.HashMap;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -30,7 +26,7 @@ import butterknife.OnClick;
 import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.CommonUtils;
 import kazpost.kz.supermarketsc.R;
-import kazpost.kz.supermarketsc.di.module.ActivityModule;
+import kazpost.kz.supermarketsc.di.component.DaggerActivityComponent;
 import kazpost.kz.supermarketsc.ui.chooseindex.ChooseIndexActivity;
 
 import static kazpost.kz.supermarketsc.CommonUtils.isBarcode;
@@ -60,7 +56,6 @@ public class ScanActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         DaggerActivityComponent.builder()
-                .activityModule(new ActivityModule(this))
                 .applicationComponent(((App) getApplication()).getComponent())
                 .build().inject(this);
 
@@ -98,12 +93,12 @@ public class ScanActivity extends AppCompatActivity {
 
     private void handleState(Status state) {
         if (state == Status.ERROR) {
-//            hideLoading();
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            hideLoading();
+            Toast.makeText(this, "hideloading", Toast.LENGTH_SHORT).show();
         }
 
         if (state == Status.LOADING) {
-//            showLoading();
+            showLoading();
             Toast.makeText(this, "loading", Toast.LENGTH_SHORT).show();
         }
 
