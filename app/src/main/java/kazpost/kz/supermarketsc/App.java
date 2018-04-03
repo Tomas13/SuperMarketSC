@@ -4,33 +4,38 @@ import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 
-import kazpost.kz.supermarketsc.di.component.ApplicationComponent;
-import kazpost.kz.supermarketsc.di.component.DaggerApplicationComponent;
-import kazpost.kz.supermarketsc.di.module.ApplicationModule;
+import kazpost.kz.supermarketsc.di.DaggerDiComponent;
+import kazpost.kz.supermarketsc.di.DiComponent;
+import kazpost.kz.supermarketsc.di.DiModule;
 
 /**
  * Created by root on 3/26/18.
  */
 
 public class App extends Application {
-    private ApplicationComponent mApplicationComponent;
+    private DiComponent mDiComponent;
+
+    private static App app;
+
+    public static App getApp() {
+        return app;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        app = this;
 
-        mApplicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this)).build();
+        mDiComponent = DaggerDiComponent.builder()
+                .diModule(new DiModule(this)).build();
 
-        mApplicationComponent.inject(this);
-
+        mDiComponent.inject(this);
 
         Stetho.initializeWithDefaults(this);
     }
 
-    public ApplicationComponent getComponent() {
-        return mApplicationComponent;
+    public DiComponent getmDiComponent() {
+        return mDiComponent;
     }
-
 }

@@ -1,14 +1,16 @@
 package kazpost.kz.supermarketsc.ui.scan;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import kazpost.kz.supermarketsc.AppExecutors;
+import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.data.SupermarketRepository;
-
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
+import kazpost.kz.supermarketsc.utils.AppExecutors;
 
 /**
  * Created by root on 3/26/18.
@@ -16,14 +18,12 @@ import kazpost.kz.supermarketsc.data.SupermarketRepository;
 
 public class ScanViewModel extends ViewModel {
 
-    private SupermarketRepository supermarketRepository;
-
-
     @Inject
-    public ScanViewModel(SupermarketRepository supermarketRepository) {
-        this.supermarketRepository = supermarketRepository;
-    }
+    SupermarketRepository supermarketRepository;
 
+    public ScanViewModel() {
+        App.getApp().getmDiComponent().inject(this);
+    }
 
     public static final String TAG = ScanViewModel.class.getSimpleName();
 
@@ -31,10 +31,13 @@ public class ScanViewModel extends ViewModel {
 
     private MutableLiveData<Status> state = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> showProgress = new MutableLiveData<>();
+
     public MutableLiveData<Status> getState() {
         return state;
     }
 
+    MutableLiveData<Envelope> envelopeMutableLiveData = new MutableLiveData<>();
 
     private AppExecutors mExecutors;
 
@@ -42,28 +45,76 @@ public class ScanViewModel extends ViewModel {
     private MutableLiveData<String> cell = new MutableLiveData<>();
     private MutableLiveData<String> barcode = new MutableLiveData<>();
 
-    public void netwo() {
-        mExecutors = AppExecutors.getInstance();
-        mData.postValue(null);
+    LiveData<Envelope> envelopeMutableLiveData1 = new MutableLiveData<>();
 
-        state.postValue(Status.LOADING);
+    public void netwo(String s) {
+        envelopeMutableLiveData1 = null;
 
-        mExecutors.networkIO().execute(() -> {
-            try {
+        showProgress.postValue(true);
 
 
-                Log.d(TAG, "netwo: " + mData.getValue());
-                Thread.sleep(3000);
-                mData.postValue("Data");
+        Log.d(TAG, "netwo: " + showProgress.getValue());
 
-                supermarketRepository.savePostIndex("post index");
-                state.postValue(Status.ERROR);
+        envelopeMutableLiveData1 = supermarketRepository.requestBarcodeInfo(barcode.getValue());
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+
+//        showProgress.postValue(false);
+
+
+        Log.d(TAG, "netwo: " + showProgress.getValue());
+        Log.d(TAG, "netwo: " + envelopeMutableLiveData1);
+
     }
+
+    public MutableLiveData<Boolean> getProgressState(){
+        return showProgress;
+    }
+
+
+//    public void netwo(String s) {
+//        mExecutors = AppExecutors.getInstance();
+//
+//        mData.postValue(null);
+//        envelopeMutableLiveData.postValue(null);
+//
+//        state.postValue(Status.LOADING);
+//
+//        RegParcelRequestEnvelope envelope = new RegParcelRequestEnvelope();
+//        RegParcelRequestBody body = new RegParcelRequestBody();
+//        ParcelInfo data = new ParcelInfo();
+//        data.setBarcode(barcode.getValue());
+//        body.setRegParcelRequestData(data);
+//
+//        envelope.setRegParcelRequestBody(body);
+//
+//        supermarketRepository.requestBarcodeInfo(envelope)
+//
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(envelope1 -> {
+//                    state.postValue(Status.ERROR);
+//
+//                    envelopeMutableLiveData.postValue(envelope1);
+//
+//                    Log.d(TAG, "requestBarcodeInfo: " + envelope1);
+//                }, throwable -> {
+//                    Log.d(TAG, "throwable: " + throwable.getMessage());
+//                    state.postValue(Status.ERROR);
+//
+//                });
+//
+//
+////        mExecutors.networkIO().execute(() -> {
+////            try {
+////
+////                Thread.sleep(6000);
+////
+////            } catch (InterruptedException e) {
+////                e.printStackTrace();
+////            }
+////        });
+//    }
+
 
     public void setRow(String value) {
         if (value.length() >= 4 && value.length() <= 5) {

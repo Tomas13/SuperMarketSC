@@ -6,8 +6,14 @@ import java.util.Map;
 
 import kazpost.kz.supermarketsc.data.network.model.Response;
 import kazpost.kz.supermarketsc.data.network.model.TechIndex;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestEnvelope;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
+import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestEnvelope;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -16,6 +22,15 @@ import rx.Observable;
  */
 
 public interface NetworkService {
+
+    @POST("parcelmarket/endpoint")
+    @Headers("Content-Type: text/xml")
+    Observable<Envelope> requestBarcodeInfo(@Body BarcodeInfoRequestEnvelope envelope);
+
+
+    @POST("parcelmarket/endpoint")
+    @Headers("Content-Type: text/xml")
+    Observable<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(@Body RegParcelRequestEnvelope envelope);
 
 
     @GET("https://bot.post.kz/api/supermarkets")

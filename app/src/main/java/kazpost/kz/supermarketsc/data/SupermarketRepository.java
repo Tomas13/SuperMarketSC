@@ -1,5 +1,6 @@
 package kazpost.kz.supermarketsc.data;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
 import java.util.List;
@@ -11,9 +12,10 @@ import javax.inject.Singleton;
 import kazpost.kz.supermarketsc.data.network.ApiHelper;
 import kazpost.kz.supermarketsc.data.network.model.Response;
 import kazpost.kz.supermarketsc.data.network.model.TechIndex;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestEnvelope;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
+import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestEnvelope;
 import kazpost.kz.supermarketsc.data.prefs.PreferencesHelper;
-import kazpost.kz.supermarketsc.di.ActivityContext;
-import kazpost.kz.supermarketsc.di.ApplicationContext;
 import retrofit2.Call;
 import rx.Observable;
 
@@ -29,7 +31,7 @@ public class SupermarketRepository implements ApiHelper, PreferencesHelper, Repo
     private final ApiHelper mApiHelper;
 
     @Inject
-    public SupermarketRepository(@ApplicationContext Context context, PreferencesHelper mPreferencesHelper, ApiHelper mApiHelper) {
+    public SupermarketRepository(Context context, PreferencesHelper mPreferencesHelper, ApiHelper mApiHelper) {
         this.mContext = context;
         this.mPreferencesHelper = mPreferencesHelper;
         this.mApiHelper = mApiHelper;
@@ -49,6 +51,21 @@ public class SupermarketRepository implements ApiHelper, PreferencesHelper, Repo
     @Override
     public Call<Response> sendCallData(Map<String, String> stringMap) {
         return mApiHelper.sendCallData(stringMap);
+    }
+
+    @Override
+    public Observable<Envelope> requestBarcodeInfo(BarcodeInfoRequestEnvelope envelope) {
+        return mApiHelper.requestBarcodeInfo(envelope);
+    }
+
+    @Override
+    public LiveData<Envelope> requestBarcodeInfo(String barcode) {
+        return mApiHelper.requestBarcodeInfo(barcode);
+    }
+
+    @Override
+    public LiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(RegParcelRequestEnvelope envelope) {
+        return mApiHelper.regParcel(envelope);
     }
 
     @Override

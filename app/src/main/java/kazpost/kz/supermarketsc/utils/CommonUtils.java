@@ -13,7 +13,7 @@
  * limitations under the License
  */
 
-package kazpost.kz.supermarketsc;
+package kazpost.kz.supermarketsc.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -57,18 +57,18 @@ public final class CommonUtils {
 
 
 
-    public static ProgressDialog showLoadingDialog(Context context) {
-        ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.show();
-        if (progressDialog.getWindow() != null) {
-            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        progressDialog.setContentView(R.layout.progress_dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(true);
-        progressDialog.setCanceledOnTouchOutside(false);
-        return progressDialog;
-    }
+//    public static ProgressDialog showLoadingDialog(Context context) {
+//        ProgressDialog progressDialog = new ProgressDialog(context);
+//        progressDialog.show();
+//        if (progressDialog.getWindow() != null) {
+//            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
+//        progressDialog.setContentView(R.layout.progress_dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setCancelable(true);
+//        progressDialog.setCanceledOnTouchOutside(false);
+//        return progressDialog;
+//    }
 
     @SuppressLint("all")
     public static String getDeviceId(Context context) {

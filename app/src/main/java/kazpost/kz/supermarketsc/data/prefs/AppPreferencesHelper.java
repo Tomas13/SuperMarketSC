@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import kazpost.kz.supermarketsc.di.ApplicationContext;
-import kazpost.kz.supermarketsc.di.PreferenceInfo;
-
 
 /**
  * Created by root on 4/12/17.
@@ -24,8 +21,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
 
     @Inject
-    public AppPreferencesHelper(@ApplicationContext Context context,
-                                @PreferenceInfo String prefFileName) {
+    public AppPreferencesHelper(Context context,
+                                String prefFileName) {
         mPrefs = context.getSharedPreferences(prefFileName, Context.MODE_PRIVATE);
     }
 

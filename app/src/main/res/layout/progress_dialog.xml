@@ -19,6 +19,16 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/holo_orange_light"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:id="@+id/tv_progress"/>
+
+
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="wrap_content"

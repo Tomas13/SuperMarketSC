@@ -1,3 +1,5 @@
+package kazpost.kz.supermarketsc.di;
+
 /*
  * Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +15,6 @@
  * limitations under the License
  */
 
-package kazpost.kz.supermarketsc.di.module;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModel;
@@ -27,7 +28,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import kazpost.kz.supermarketsc.AppConstants;
+import kazpost.kz.supermarketsc.utils.AppConstants;
 import kazpost.kz.supermarketsc.data.Repo;
 import kazpost.kz.supermarketsc.data.SupermarketRepository;
 import kazpost.kz.supermarketsc.data.network.ApiHelper;
@@ -35,8 +36,6 @@ import kazpost.kz.supermarketsc.data.network.AppApiHelper;
 import kazpost.kz.supermarketsc.data.network.NetworkService;
 import kazpost.kz.supermarketsc.data.prefs.AppPreferencesHelper;
 import kazpost.kz.supermarketsc.data.prefs.PreferencesHelper;
-import kazpost.kz.supermarketsc.di.ApplicationContext;
-import kazpost.kz.supermarketsc.di.PreferenceInfo;
 import kazpost.kz.supermarketsc.ui.scan.ScanViewModel;
 import kazpost.kz.supermarketsc.ui.scan.ScanViewModelFactory;
 import okhttp3.Cache;
@@ -44,8 +43,9 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-import static kazpost.kz.supermarketsc.AppConstants.BASE_URL;
+import static kazpost.kz.supermarketsc.utils.AppConstants.BASE_URL;
 
 
 /**
@@ -53,16 +53,15 @@ import static kazpost.kz.supermarketsc.AppConstants.BASE_URL;
  */
 
 @Module
-public class ApplicationModule {
+public class DiModule {
 
     private final Application mApplication;
 
-    public ApplicationModule(Application application) {
+    public DiModule(Application application) {
         mApplication = application;
     }
 
     @Provides
-    @ApplicationContext
     Context provideContext() {
         return mApplication;
     }
@@ -74,7 +73,6 @@ public class ApplicationModule {
 
 
     @Provides
-    @PreferenceInfo
     String providePreferenceName() {
         return AppConstants.PREF_NAME;
     }
@@ -135,7 +133,7 @@ public class ApplicationModule {
     @Singleton
     NetworkService provideNetworkService(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
@@ -149,5 +147,7 @@ public class ApplicationModule {
     ApiHelper provideApiHelper(AppApiHelper appApiHelper) {
         return appApiHelper;
     }
+
+
 
 }

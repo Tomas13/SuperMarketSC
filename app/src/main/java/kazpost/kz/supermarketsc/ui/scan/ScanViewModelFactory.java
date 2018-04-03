@@ -6,15 +6,13 @@ import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
-import kazpost.kz.supermarketsc.data.SupermarketRepository;
 
 public class ScanViewModelFactory implements ViewModelProvider.Factory {
 
-    private ScanViewModel scanViewModel;
+    ScanViewModel scanViewModel;
 
     @Inject
     public ScanViewModelFactory(ScanViewModel scanViewModel) {
-
         this.scanViewModel = scanViewModel;
     }
 

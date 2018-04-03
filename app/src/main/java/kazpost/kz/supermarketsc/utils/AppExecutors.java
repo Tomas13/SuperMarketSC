@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package kazpost.kz.supermarketsc;
+package kazpost.kz.supermarketsc.utils;
 
 import android.os.Handler;
 import android.os.Looper;

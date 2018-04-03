@@ -13,8 +13,9 @@
  * limitations under the License
  */
 
-package kazpost.kz.supermarketsc.di.component;
+package kazpost.kz.supermarketsc.di;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -24,25 +25,22 @@ import dagger.Component;
 import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.data.SupermarketRepository;
 import kazpost.kz.supermarketsc.data.network.NetworkService;
-import kazpost.kz.supermarketsc.di.ApplicationContext;
-import kazpost.kz.supermarketsc.di.module.ApplicationModule;
-import kazpost.kz.supermarketsc.ui.scan.ScanActivity;
 import kazpost.kz.supermarketsc.ui.scan.ScanViewModel;
+import kazpost.kz.supermarketsc.ui.scan.ScanViewModelFactory;
 
 /**
  * Created by janisharali on 27/01/17.
  */
 
 @Singleton
-@Component(modules = ApplicationModule.class)
-public interface ApplicationComponent {
+@Component(modules = DiModule.class)
+public interface DiComponent {
 
     void inject(App app);
 
 
 
 
-    @ApplicationContext
     Context context();
 
     Application application();
@@ -51,7 +49,11 @@ public interface ApplicationComponent {
 
     NetworkService getNetworkService();
 
-//    void inject(ScanActivity scanActivity);
+    void inject(Activity scanActivity);
 
     void inject(ScanViewModel scanViewModel);
+
+    void inject(ScanViewModelFactory scanViewModelFactory);
+
+
 }
