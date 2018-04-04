@@ -12,9 +12,10 @@ import javax.inject.Singleton;
 import kazpost.kz.supermarketsc.data.network.ApiHelper;
 import kazpost.kz.supermarketsc.data.network.model.Response;
 import kazpost.kz.supermarketsc.data.network.model.TechIndex;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestCallback;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestEnvelope;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
-import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestEnvelope;
+import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestCallback;
 import kazpost.kz.supermarketsc.data.prefs.PreferencesHelper;
 import retrofit2.Call;
 import rx.Observable;
@@ -59,14 +60,17 @@ public class SupermarketRepository implements ApiHelper, PreferencesHelper, Repo
     }
 
     @Override
-    public LiveData<Envelope> requestBarcodeInfo(String barcode) {
-        return mApiHelper.requestBarcodeInfo(barcode);
+    public LiveData<Envelope> requestBarcodeInfo(String barcode, BarcodeInfoRequestCallback callback) {
+        return mApiHelper.requestBarcodeInfo(barcode, callback);
     }
 
     @Override
-    public LiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(RegParcelRequestEnvelope envelope) {
-        return mApiHelper.regParcel(envelope);
+    public LiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(
+            String barcode, String shelfBarcode, String sender,
+            String recipient, String recipientPhone, String marketIndex, RegParcelRequestCallback callback) {
+        return mApiHelper.regParcel(barcode, shelfBarcode, sender, recipient, recipientPhone, marketIndex, callback);
     }
+
 
     @Override
     public void savePostIndex(String postIndex) {

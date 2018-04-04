@@ -9,17 +9,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baozi.Zxing.CaptureActivity;
 import com.baozi.Zxing.ZXingConstants;
-import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import javax.inject.Inject;
@@ -32,7 +33,6 @@ import kazpost.kz.supermarketsc.R;
 import kazpost.kz.supermarketsc.ui.chooseindex.ChooseIndexActivity;
 
 import static kazpost.kz.supermarketsc.utils.CommonUtils.isBarcode;
-import static kazpost.kz.supermarketsc.utils.CommonUtils.isRow;
 
 public class ScanActivity extends AppCompatActivity {
 
@@ -60,30 +60,28 @@ public class ScanActivity extends AppCompatActivity {
 
         mViewModel = ViewModelProviders.of(this, factory).get(ScanViewModel.class);
 
-        mViewModel.envelopeMutableLiveData1.observe(this, s -> {
-            if (!s.getBody().getSavePaymentSrvResponse().getResponseInfo().getResponseText().equals("")) {
-                hideLoading();
-//                Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        initProgress();
+
+        initTextViewListeners();
+    }
+
+    private void initProgress() {
+        mViewModel.getProgressState().observe(this, aBoolean -> {
+            if (aBoolean) {
+                Log.d(TAG, "getProgress: " + aBoolean);
+                showLoading("Загрузка");
             } else {
-                showLoading();
+                Log.d(TAG, "getProgress: " + aBoolean);
+                hideLoading();
             }
         });
+    }
 
-//        mViewModel.getProgressState().observe(this, aBoolean -> {
-//            if (aBoolean) {
-//                Log.d(TAG, "onCreate: " + aBoolean);
-//                showLoading("Загрузка");
-//            } else {
-//                Log.d(TAG, "onCreate: " + aBoolean);
-//                hideLoading();
-//            }
-//        });
+    private void initTextViewListeners() {
 
-        mViewModel.getRow().observe(this, s -> Log.d(TAG, "row: " + s));
-        mViewModel.getCell().observe(this, s -> Log.d(TAG, "cell: " + s));
-        mViewModel.getBarcode().observe(this, s -> Log.d(TAG, "barcode: " + s));
+        mViewModel.getErrorMessage().observe(this, s -> Toast.makeText(this, s, Toast.LENGTH_SHORT).show());
 
-        RxTextView.textChanges(etPostcode)
+      /*  RxTextView.textChanges(etPostcode)
                 .skipInitialValue()
                 .filter(charSequence -> isBarcode(charSequence.toString()))
                 .subscribe(charSequence -> mViewModel.setBarcode(charSequence.toString()));
@@ -91,46 +89,18 @@ public class ScanActivity extends AppCompatActivity {
         RxTextView.textChanges(etRow)
                 .skipInitialValue()
                 .filter(charSequence -> isRow(charSequence.toString()))
-                .subscribe(charSequence -> mViewModel.setRow(charSequence.toString()));
-
-        mViewModel.getState().observe(this, this::handleState);
-
-    }
-
-    private void handleState(Status state) {
-        if (state == Status.ERROR) {
-            hideLoading();
-            Log.d(TAG, "handleState: hideloading");
-//            Toast.makeText(this, "hideloading", Toast.LENGTH_SHORT).show();
-        }
-
-        if (state == Status.LOADING) {
-            showLoading("Loading...");
-            Log.d(TAG, "handleState: Loading " + mProgressDialog);
-//            Toast.makeText(this, "loading", Toast.LENGTH_SHORT).show();
-        }
+                .subscribe(charSequence -> mViewModel.setRow(charSequence.toString()));*/
     }
 
     @OnClick({R.id.btn_send, R.id.btn_clean, R.id.btn_scan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_send:
-
-                mViewModel.netwo(etPostcode.getText().toString());
-
-                mViewModel.envelopeMutableLiveData1.observe(this, envelope1 -> {
-                    if (envelope1 == null) {
-                        showLoading("Barcode Info Request");
-                    }else{
-                        hideLoading();
-                        if (envelope1.getBody().getSavePaymentSrvResponse().getResponseInfo().getResponseCode().equals("ERROR")) {
-                            Toast.makeText(this, envelope1.getBody().getSavePaymentSrvResponse().getResponseInfo().getResponseText(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
+                if (isBarcode(etPostcode.getText().toString())) {
+                    mViewModel.netwo(etPostcode.getText().toString());
+                } else {
+                    showToast("Неверно введен баркод");
+                }
                 break;
             case R.id.btn_clean:
                 break;
@@ -150,6 +120,19 @@ public class ScanActivity extends AppCompatActivity {
                         });
                 break;
         }
+    }
+
+    private void showToast(String msg) {
+        Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP, 0, 50);
+
+        //trying to increase the toast font
+        ViewGroup group = (ViewGroup) toast.getView();
+        TextView messageTextView = (TextView) group.getChildAt(0);
+        messageTextView.setTextSize(25);
+
+        toast.setText(msg);
+        toast.show();
     }
 
     public void showLoading(String... message) {
@@ -172,8 +155,6 @@ public class ScanActivity extends AppCompatActivity {
 
         TextView textView = view.findViewById(R.id.tv_progress);
         if (message.length > 0) textView.setText(message[0]);
-
-
 
 
         mProgressDialog.setCancelable(true);

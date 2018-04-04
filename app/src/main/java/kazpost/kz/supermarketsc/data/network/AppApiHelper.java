@@ -3,7 +3,6 @@ package kazpost.kz.supermarketsc.data.network;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
 
 import java.util.List;
 import java.util.Map;
@@ -14,12 +13,14 @@ import javax.inject.Singleton;
 import kazpost.kz.supermarketsc.data.network.model.Response;
 import kazpost.kz.supermarketsc.data.network.model.TechIndex;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestBody;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestCallback;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestData;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestEnvelope;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.ParcelInfo;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelData;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestBody;
+import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestCallback;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestEnvelope;
 import retrofit2.Call;
 import rx.Observable;
@@ -65,8 +66,9 @@ public class AppApiHelper implements ApiHelper {
         return networkService.requestBarcodeInfo(envelope);
     }
 
+
     @Override
-    public LiveData<Envelope> requestBarcodeInfo(String barcode) {
+    public LiveData<Envelope> requestBarcodeInfo(String barcode, BarcodeInfoRequestCallback callback) {
 
         BarcodeInfoRequestEnvelope envelope = new BarcodeInfoRequestEnvelope();
         BarcodeInfoRequestBody body = new BarcodeInfoRequestBody();
@@ -76,55 +78,63 @@ public class AppApiHelper implements ApiHelper {
 
         envelope.setBarcodeInfoRequestBody(body);
 
+        callback.onDataLoading();
+
         final MutableLiveData<Envelope> envelopeMutableLiveData = new MutableLiveData<>();
 
         networkService.requestBarcodeInfo(envelope)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(envelope1 -> {
+
                     envelopeMutableLiveData.postValue(envelope1);
-                    Log.d(TAG, "requestBarcodeInfo: " + envelope1);
-                }, throwable -> {
-                    Log.d(TAG, "throwable: " + throwable.getMessage());
-//                    state.postValue(Status.ERROR);
-                });
+                    callback.onTasksLoaded(envelope1);
+
+                }, throwable -> callback.onDataNotAvailable(throwable.getMessage()));
+
         return envelopeMutableLiveData;
     }
 
     @Override
-    public LiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(RegParcelRequestEnvelope envelope) {
+    public LiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope> regParcel(
+            String barcode, String shelfBarcode, String sender,
+            String recipient, String recipientPhone, String marketIndex, RegParcelRequestCallback callback) {
 
         RegParcelRequestEnvelope envelope1 = new RegParcelRequestEnvelope();
         RegParcelRequestBody body = new RegParcelRequestBody();
         RegParcelData data = new RegParcelData();
         ParcelInfo parcelInfo = new ParcelInfo();
 
-        parcelInfo.setBarcode("Barcode");
-        parcelInfo.setMarketIndex("010000");
-        parcelInfo.setRecipient("1");
-        parcelInfo.setSender("1");
-        parcelInfo.setShelfBarcode("1234");
-        parcelInfo.setRecipientPhone("87072226642");
+        parcelInfo.setaBarcode(barcode);
+        parcelInfo.setbShelfBarcode(shelfBarcode);
+        parcelInfo.setcSender(sender);
+        parcelInfo.setdRecipient(recipient);
+        parcelInfo.seteRecipientPhone(recipientPhone);
+        parcelInfo.setfMarketIndex(marketIndex);
 
         data.setParcelInfo(parcelInfo);
         body.setRegParcelData(data);
         envelope1.setRegParcelRequestBody(body);
 
+
+        callback.onDataLoading();
+
+
         final MutableLiveData<kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope>
                 envelopeMutableLiveData = new MutableLiveData<>();
-
         networkService.regParcel(envelope1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(envelope2 -> {
                     envelopeMutableLiveData.postValue(envelope2);
-                    Log.d(TAG, "regParcel: " + envelope1);
-                }, throwable -> {
-                    Log.d(TAG, "throwable: " + throwable.getMessage());
-//                    state.postValue(Status.ERROR);
-                });
+
+                    callback.onTasksLoaded(envelope2);
+
+                }, throwable -> callback.onDataNotAvailable(throwable.getMessage()));
+
 
         return envelopeMutableLiveData;
     }
+
 
 }

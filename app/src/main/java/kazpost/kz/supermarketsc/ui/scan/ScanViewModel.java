@@ -9,14 +9,17 @@ import javax.inject.Inject;
 
 import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.data.SupermarketRepository;
+import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestCallback;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
-import kazpost.kz.supermarketsc.utils.AppExecutors;
+import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestCallback;
 
 /**
  * Created by root on 3/26/18.
  */
 
 public class ScanViewModel extends ViewModel {
+
+    public static final String TAG = ScanViewModel.class.getSimpleName();
 
     @Inject
     SupermarketRepository supermarketRepository;
@@ -25,98 +28,79 @@ public class ScanViewModel extends ViewModel {
         App.getApp().getmDiComponent().inject(this);
     }
 
-    public static final String TAG = ScanViewModel.class.getSimpleName();
-
-    private MutableLiveData<String> mData = new MutableLiveData<>();
-
-    private MutableLiveData<Status> state = new MutableLiveData<>();
-
     private MutableLiveData<Boolean> showProgress = new MutableLiveData<>();
+    private MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-    public MutableLiveData<Status> getState() {
-        return state;
-    }
-
-    MutableLiveData<Envelope> envelopeMutableLiveData = new MutableLiveData<>();
-
-    private AppExecutors mExecutors;
-
-    private MutableLiveData<String> row = new MutableLiveData<>();
+/*    private MutableLiveData<String> row = new MutableLiveData<>();
     private MutableLiveData<String> cell = new MutableLiveData<>();
-    private MutableLiveData<String> barcode = new MutableLiveData<>();
-
-    LiveData<Envelope> envelopeMutableLiveData1 = new MutableLiveData<>();
-
-    public void netwo(String s) {
-        envelopeMutableLiveData1 = null;
-
-        showProgress.postValue(true);
+    private MutableLiveData<String> barcode = new MutableLiveData<>();*/
 
 
-        Log.d(TAG, "netwo: " + showProgress.getValue());
-
-        envelopeMutableLiveData1 = supermarketRepository.requestBarcodeInfo(barcode.getValue());
+    public void netwo(String barcode) {
 
 
-//        showProgress.postValue(false);
+        /*        envelopeMutableLiveData = */
+        supermarketRepository.requestBarcodeInfo(barcode, new BarcodeInfoRequestCallback() {
+            @Override
+            public void onTasksLoaded(Envelope envelope) {
+                showProgress.postValue(false);
+                Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
 
+                regParcelRequest(barcode, "1234",
+                        envelope.getBody().getSavePaymentSrvResponse().getSndr(),
+                        envelope.getBody().getSavePaymentSrvResponse().getRcpn(),
+                        envelope.getBody().getSavePaymentSrvResponse().getRcpnPhone(),
+                        "010000");
+            }
 
-        Log.d(TAG, "netwo: " + showProgress.getValue());
-        Log.d(TAG, "netwo: " + envelopeMutableLiveData1);
+            @Override
+            public void onDataNotAvailable(String errorMsg) {
+                showProgress.postValue(false);
+                errorMessage.postValue(errorMsg);
+            }
+
+            @Override
+            public void onDataLoading() {
+                showProgress.postValue(true);
+            }
+        });
 
     }
 
-    public MutableLiveData<Boolean> getProgressState(){
+    private void regParcelRequest(String barcode, String shelfBarcode, String sender,
+                                  String recipient, String recipientPhone, String marketIndex) {
+
+
+        supermarketRepository.regParcel(barcode, shelfBarcode, sender, recipient, recipientPhone, marketIndex, new RegParcelRequestCallback() {
+            @Override
+            public void onTasksLoaded(kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope envelope) {
+                showProgress.postValue(false);
+                Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
+                errorMessage.postValue(envelope.getBody().getRegParcelResponse().getResponseInfo().getResponseText());
+            }
+
+            @Override
+            public void onDataNotAvailable(String errorMsg) {
+                showProgress.postValue(false);
+                errorMessage.postValue(errorMsg);
+            }
+
+            @Override
+            public void onDataLoading() {
+                showProgress.postValue(true);
+            }
+        });
+    }
+
+    public MutableLiveData<Boolean> getProgressState() {
         return showProgress;
     }
 
+    public MutableLiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
 
-//    public void netwo(String s) {
-//        mExecutors = AppExecutors.getInstance();
-//
-//        mData.postValue(null);
-//        envelopeMutableLiveData.postValue(null);
-//
-//        state.postValue(Status.LOADING);
-//
-//        RegParcelRequestEnvelope envelope = new RegParcelRequestEnvelope();
-//        RegParcelRequestBody body = new RegParcelRequestBody();
-//        ParcelInfo data = new ParcelInfo();
-//        data.setBarcode(barcode.getValue());
-//        body.setRegParcelRequestData(data);
-//
-//        envelope.setRegParcelRequestBody(body);
-//
-//        supermarketRepository.requestBarcodeInfo(envelope)
-//
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(envelope1 -> {
-//                    state.postValue(Status.ERROR);
-//
-//                    envelopeMutableLiveData.postValue(envelope1);
-//
-//                    Log.d(TAG, "requestBarcodeInfo: " + envelope1);
-//                }, throwable -> {
-//                    Log.d(TAG, "throwable: " + throwable.getMessage());
-//                    state.postValue(Status.ERROR);
-//
-//                });
-//
-//
-////        mExecutors.networkIO().execute(() -> {
-////            try {
-////
-////                Thread.sleep(6000);
-////
-////            } catch (InterruptedException e) {
-////                e.printStackTrace();
-////            }
-////        });
-//    }
-
-
-    public void setRow(String value) {
+/*    public void setRow(String value) {
         if (value.length() >= 4 && value.length() <= 5) {
             row.postValue(value.substring(0, value.length() - 3));
             cell.postValue(value.substring(value.length() - 3));
@@ -124,10 +108,6 @@ public class ScanViewModel extends ViewModel {
             row.postValue(null);
             cell.postValue(null);
         }
-    }
-
-    public MutableLiveData<String> getmData() {
-        return mData;
     }
 
     public MutableLiveData<String> getRow() {
@@ -148,5 +128,5 @@ public class ScanViewModel extends ViewModel {
         } else {
             barcode.postValue(null);
         }
-    }
+    }*/
 }

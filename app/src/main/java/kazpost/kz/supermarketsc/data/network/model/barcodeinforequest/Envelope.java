@@ -76,6 +76,8 @@ public class Envelope {
 
         @Element(name = "Rcpn", required = false)
         String rcpn;
+        @Element(name = "RcpnPhone", required = false)
+        String rcpnPhone;
 
         @Element(name = "SndrPhone", required = false)
         String sndrPhone;
@@ -97,6 +99,10 @@ public class Envelope {
 
         public String getSndrIIN() {
             return sndrIIN;
+        }
+
+        public String getRcpnPhone() {
+            return rcpnPhone;
         }
 
         public ResponseInfo getResponseInfo() {

@@ -38,9 +38,6 @@ public interface DiComponent {
 
     void inject(App app);
 
-
-
-
     Context context();
 
     Application application();

@@ -7,44 +7,44 @@ import org.simpleframework.xml.Root;
 public class ParcelInfo {
 
     @Element(name = "sch:Barcode", required = false)
-    String barcode;
+    String aBarcode;
 
     @Element(name = "sch:ShelfBarcode", required = false)
-    String ShelfBarcode;
+    String bShelfBarcode;
 
     @Element(name = "sch:Sender", required = false)
-    String Sender;
+    String cSender;
 
     @Element(name = "sch:Recipient", required = false)
-    String Recipient;
+    String dRecipient;
 
     @Element(name = "sch:RecipientPhone", required = false)
-    String RecipientPhone;
+    String eRecipientPhone;
 
     @Element(name = "sch:MarketIndex", required = false)
-    String MarketIndex;
+    String fMarketIndex;
 
-    public void setShelfBarcode(String shelfBarcode) {
-        ShelfBarcode = shelfBarcode;
+    public void setaBarcode(String aBarcode) {
+        this.aBarcode = aBarcode;
     }
 
-    public void setSender(String sender) {
-        Sender = sender;
+    public void setbShelfBarcode(String bShelfBarcode) {
+        this.bShelfBarcode = bShelfBarcode;
     }
 
-    public void setRecipient(String recipient) {
-        Recipient = recipient;
+    public void setcSender(String cSender) {
+        this.cSender = cSender;
     }
 
-    public void setRecipientPhone(String recipientPhone) {
-        RecipientPhone = recipientPhone;
+    public void setdRecipient(String dRecipient) {
+        this.dRecipient = dRecipient;
     }
 
-    public void setMarketIndex(String marketIndex) {
-        MarketIndex = marketIndex;
+    public void seteRecipientPhone(String eRecipientPhone) {
+        this.eRecipientPhone = eRecipientPhone;
     }
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
+    public void setfMarketIndex(String fMarketIndex) {
+        this.fMarketIndex = fMarketIndex;
     }
 }
