@@ -67,6 +67,14 @@ public class ScanActivity extends AppCompatActivity {
         initTextViewListeners();
 
         setupToastMessages();
+
+        IfIndexIsNotSetStartChooseActivity();
+    }
+
+    private void IfIndexIsNotSetStartChooseActivity() {
+        if (!mViewModel.isMarketIndexExist()) {
+            startActivity(new Intent(this, ChooseIndexActivity.class));
+        }
     }
 
     private void setupToastMessages() {

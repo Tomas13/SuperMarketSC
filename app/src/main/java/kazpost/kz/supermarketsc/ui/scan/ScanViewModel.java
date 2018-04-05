@@ -53,11 +53,13 @@ public class ScanViewModel extends ViewModel {
             public void onTasksLoaded(Envelope envelope) {
                 showProgress.postValue(false);
 
+                String marketIndex = supermarketRepository.getPostIndex();
+
                 regParcelRequest(barcode, shelfBarcode,
                         envelope.getBody().getSavePaymentSrvResponse().getSndr(),
                         envelope.getBody().getSavePaymentSrvResponse().getRcpn(),
                         envelope.getBody().getSavePaymentSrvResponse().getRcpnPhone(),
-                        "010000");
+                        marketIndex);
             }
 
             @Override
@@ -102,6 +104,20 @@ public class ScanViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> getProgressState() {
         return showProgress;
+    }
+
+    public void saveMarketIndex(String marketIndex) {
+        supermarketRepository.savePostIndex(marketIndex);
+
+        showToast("Индекс супермаркета успешно сохранен");
+    }
+
+    public boolean isMarketIndexExist() {
+        return !supermarketRepository.getPostIndex().equals("Не выбрано");
+    }
+
+    public String getMarketIndex() {
+        return supermarketRepository.getPostIndex();
     }
 
 

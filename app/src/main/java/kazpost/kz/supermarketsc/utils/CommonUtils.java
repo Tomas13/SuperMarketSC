@@ -54,6 +54,14 @@ public final class CommonUtils {
         return matcher.find();
     }
 
+    public static boolean isMarketIndex(String value) {
+        Pattern mPatternRow = Pattern.compile("^([0-9]{6})$");
+        Matcher matcher = mPatternRow.matcher(value);
+
+        return matcher.find();
+    }
+
+
 
 
 

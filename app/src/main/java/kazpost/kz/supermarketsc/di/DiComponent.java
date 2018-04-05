@@ -25,6 +25,7 @@ import dagger.Component;
 import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.data.SupermarketRepository;
 import kazpost.kz.supermarketsc.data.network.NetworkService;
+import kazpost.kz.supermarketsc.ui.chooseindex.ChooseIndexActivity;
 import kazpost.kz.supermarketsc.ui.scan.ScanViewModel;
 import kazpost.kz.supermarketsc.ui.scan.ScanViewModelFactory;
 
@@ -47,6 +48,7 @@ public interface DiComponent {
     NetworkService getNetworkService();
 
     void inject(Activity scanActivity);
+
 
     void inject(ScanViewModel scanViewModel);
 

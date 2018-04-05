@@ -38,5 +38,7 @@
     <string name="scan">Сканировать</string>
     <string name="send">Отправить</string>
     <string name="clear">очистить</string>
+    <string name="enter_market_index">Индекс супермаркета</string>
+    <string name="save_market_index">Сохранить</string>
 </resources>
 
