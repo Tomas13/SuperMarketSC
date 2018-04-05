@@ -1,6 +1,5 @@
 package kazpost.kz.supermarketsc.ui.scan;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
@@ -12,6 +11,7 @@ import kazpost.kz.supermarketsc.data.SupermarketRepository;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInfoRequestCallback;
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestCallback;
+import kazpost.kz.supermarketsc.utils.ToastMessage;
 
 /**
  * Created by root on 3/26/18.
@@ -28,15 +28,23 @@ public class ScanViewModel extends ViewModel {
         App.getApp().getmDiComponent().inject(this);
     }
 
+    private final ToastMessage mToast = new ToastMessage();
     private MutableLiveData<Boolean> showProgress = new MutableLiveData<>();
-    private MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
-/*    private MutableLiveData<String> row = new MutableLiveData<>();
+    public ToastMessage getmToast() {
+        return mToast;
+    }
+
+    private void showToast(String message) {
+        mToast.postValue(message);
+    }
+
+    /*    private MutableLiveData<String> row = new MutableLiveData<>();
     private MutableLiveData<String> cell = new MutableLiveData<>();
     private MutableLiveData<String> barcode = new MutableLiveData<>();*/
 
 
-    public void netwo(String barcode) {
+    public void netwo(String barcode, String shelfBarcode) {
 
 
         /*        envelopeMutableLiveData = */
@@ -44,9 +52,8 @@ public class ScanViewModel extends ViewModel {
             @Override
             public void onTasksLoaded(Envelope envelope) {
                 showProgress.postValue(false);
-                Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
 
-                regParcelRequest(barcode, "1234",
+                regParcelRequest(barcode, shelfBarcode,
                         envelope.getBody().getSavePaymentSrvResponse().getSndr(),
                         envelope.getBody().getSavePaymentSrvResponse().getRcpn(),
                         envelope.getBody().getSavePaymentSrvResponse().getRcpnPhone(),
@@ -56,7 +63,7 @@ public class ScanViewModel extends ViewModel {
             @Override
             public void onDataNotAvailable(String errorMsg) {
                 showProgress.postValue(false);
-                errorMessage.postValue(errorMsg);
+                showToast(errorMsg);
             }
 
             @Override
@@ -71,34 +78,32 @@ public class ScanViewModel extends ViewModel {
                                   String recipient, String recipientPhone, String marketIndex) {
 
 
-        supermarketRepository.regParcel(barcode, shelfBarcode, sender, recipient, recipientPhone, marketIndex, new RegParcelRequestCallback() {
-            @Override
-            public void onTasksLoaded(kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope envelope) {
-                showProgress.postValue(false);
-                Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
-                errorMessage.postValue(envelope.getBody().getRegParcelResponse().getResponseInfo().getResponseText());
-            }
+        supermarketRepository.regParcel(barcode, shelfBarcode, sender, recipient, recipientPhone, marketIndex,
+                new RegParcelRequestCallback() {
+                    @Override
+                    public void onTasksLoaded(kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope envelope) {
+                        showProgress.postValue(false);
+                        Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
 
-            @Override
-            public void onDataNotAvailable(String errorMsg) {
-                showProgress.postValue(false);
-                errorMessage.postValue(errorMsg);
-            }
+                        showToast(envelope.getBody().getRegParcelResponse().getResponseInfo().getResponseText());
+                    }
 
-            @Override
-            public void onDataLoading() {
-                showProgress.postValue(true);
-            }
-        });
+                    @Override
+                    public void onDataNotAvailable(String errorMsg) {
+                        showProgress.postValue(false);
+                    }
+
+                    @Override
+                    public void onDataLoading() {
+                        showProgress.postValue(true);
+                    }
+                });
     }
 
     public MutableLiveData<Boolean> getProgressState() {
         return showProgress;
     }
 
-    public MutableLiveData<String> getErrorMessage() {
-        return errorMessage;
-    }
 
 /*    public void setRow(String value) {
         if (value.length() >= 4 && value.length() <= 5) {

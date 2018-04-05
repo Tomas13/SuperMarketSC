@@ -31,8 +31,10 @@ import butterknife.OnClick;
 import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.R;
 import kazpost.kz.supermarketsc.ui.chooseindex.ChooseIndexActivity;
+import kazpost.kz.supermarketsc.utils.ToastMessage;
 
 import static kazpost.kz.supermarketsc.utils.CommonUtils.isBarcode;
+import static kazpost.kz.supermarketsc.utils.CommonUtils.isRow;
 
 public class ScanActivity extends AppCompatActivity {
 
@@ -63,6 +65,14 @@ public class ScanActivity extends AppCompatActivity {
         initProgress();
 
         initTextViewListeners();
+
+        setupToastMessages();
+    }
+
+    private void setupToastMessages() {
+        mViewModel.getmToast().observe(this, (ToastMessage.ToastObserver) message -> {
+            showToast(message);
+        });
     }
 
     private void initProgress() {
@@ -79,7 +89,6 @@ public class ScanActivity extends AppCompatActivity {
 
     private void initTextViewListeners() {
 
-        mViewModel.getErrorMessage().observe(this, s -> Toast.makeText(this, s, Toast.LENGTH_SHORT).show());
 
       /*  RxTextView.textChanges(etPostcode)
                 .skipInitialValue()
@@ -96,10 +105,10 @@ public class ScanActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_send:
-                if (isBarcode(etPostcode.getText().toString())) {
-                    mViewModel.netwo(etPostcode.getText().toString());
+                if (isBarcode(etPostcode.getText().toString()) && isRow(etRow.getText().toString())) {
+                    mViewModel.netwo(etPostcode.getText().toString(), etRow.getText().toString());
                 } else {
-                    showToast("Неверно введен баркод");
+                    showToast("Неверно введен баркод или номер ячейки");
                 }
                 break;
             case R.id.btn_clean:
@@ -129,7 +138,7 @@ public class ScanActivity extends AppCompatActivity {
         //trying to increase the toast font
         ViewGroup group = (ViewGroup) toast.getView();
         TextView messageTextView = (TextView) group.getChildAt(0);
-        messageTextView.setTextSize(25);
+        messageTextView.setTextSize(20);
 
         toast.setText(msg);
         toast.show();
