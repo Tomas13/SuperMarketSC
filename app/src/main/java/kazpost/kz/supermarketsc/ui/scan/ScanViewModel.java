@@ -12,6 +12,7 @@ import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.BarcodeInf
 import kazpost.kz.supermarketsc.data.network.model.barcodeinforequest.Envelope;
 import kazpost.kz.supermarketsc.data.network.model.regparcelrequest.RegParcelRequestCallback;
 import kazpost.kz.supermarketsc.utils.ToastMessage;
+import timber.log.Timber;
 
 /**
  * Created by root on 3/26/18.
@@ -85,7 +86,7 @@ public class ScanViewModel extends ViewModel {
                     @Override
                     public void onTasksLoaded(kazpost.kz.supermarketsc.data.network.model.regparcelrequest.Envelope envelope) {
                         showProgress.postValue(false);
-                        Log.d(TAG, "onTaskLoaded: " + showProgress.getValue());
+                        Timber.i("onTaskLoaded: %s", showProgress.getValue());
 
                         showToast(envelope.getBody().getRegParcelResponse().getResponseInfo().getResponseText());
                     }

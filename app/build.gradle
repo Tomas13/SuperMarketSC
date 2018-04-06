@@ -89,5 +89,7 @@ dependencies {
 
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
 
 }
