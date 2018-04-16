@@ -27,9 +27,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:hint="@string/enter_market_index"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/btn_save_index"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+        <requestFocus/>
+    </EditText>
 
 
 

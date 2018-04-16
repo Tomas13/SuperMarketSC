@@ -1,11 +1,13 @@
 package kazpost.kz.supermarketsc.ui.chooseindex;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,7 @@ public class ChooseIndexActivity extends AppCompatActivity {
 
         App.getApp().getmDiComponent().inject(this);
 
+
         mViewModel = ViewModelProviders.of(this, factory).get(ScanViewModel.class);
 
         if (mViewModel.isMarketIndexExist()) {
@@ -52,6 +55,15 @@ public class ChooseIndexActivity extends AppCompatActivity {
             showToast(message);
             super.onBackPressed();
         });
+
+        etMarketIndex.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
+
+
     }
 
 

@@ -32,6 +32,7 @@ import kazpost.kz.supermarketsc.App;
 import kazpost.kz.supermarketsc.R;
 import kazpost.kz.supermarketsc.ui.chooseindex.ChooseIndexActivity;
 import kazpost.kz.supermarketsc.utils.ToastMessage;
+import timber.log.Timber;
 
 import static kazpost.kz.supermarketsc.utils.CommonUtils.isBarcode;
 import static kazpost.kz.supermarketsc.utils.CommonUtils.isRow;
@@ -78,9 +79,7 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void setupToastMessages() {
-        mViewModel.getmToast().observe(this, (ToastMessage.ToastObserver) message -> {
-            showToast(message);
-        });
+        mViewModel.getmToast().observe(this, (ToastMessage.ToastObserver) this::showToast);
     }
 
     private void initProgress() {
@@ -120,6 +119,10 @@ public class ScanActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_clean:
+                etPostcode.getText().clear();
+                etRow.getText().clear();
+                etPostcode.requestFocus();
+
                 break;
             case R.id.btn_scan:
                 RxPermissions rxPermissions = new RxPermissions(this); // where this is an Activity instance
@@ -140,6 +143,14 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     private void showToast(String msg) {
+        if (msg.equals("Посылка зарегистрирована!")) {
+            etPostcode.getText().clear();
+            etRow.getText().clear();
+            etPostcode.requestFocus();
+
+        }
+
+
         Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.TOP, 0, 50);
 
@@ -157,7 +168,7 @@ public class ScanActivity extends AppCompatActivity {
 
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            Log.d(TAG, "showLoading: created mProgress " + mProgressDialog);
+            Timber.d("showLoading: created mProgress %s", mProgressDialog);
         }
         mProgressDialog.show();
 
@@ -240,7 +251,5 @@ public class ScanActivity extends AppCompatActivity {
         super.onDestroy();
         hideLoading();
         mProgressDialog = null;
-
-        Log.d(TAG, "onDestroy: mProgressDialog =  " + mProgressDialog);
     }
 }

@@ -8,7 +8,7 @@ public class ReleaseTree extends Timber.Tree {
 
     @Override
     protected boolean isLoggable(String tag, int priority) {
-        if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO){
+        if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
             return false;
         }
 
@@ -18,9 +18,20 @@ public class ReleaseTree extends Timber.Tree {
 
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
-
-        if(isLoggable(priority)){
-
-        }
+//        if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+//            return;
+//        }
+//
+//        FakeCrashLibrary.log(priority, tag, message);
+//
+//        if (t != null) {
+//            if (priority == Log.ERROR) {
+//                FakeCrashLibrary.logError(t);
+//            } else if (priority == Log.WARN) {
+//                FakeCrashLibrary.logWarning(t);
+//            }
+//        }
+//    }
     }
+
 }
