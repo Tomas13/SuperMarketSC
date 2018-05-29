@@ -13,6 +13,7 @@ public class AppConstants {
 //    public static final String BASE_URL = "https://bot.post.kz/api/";
 //    public static final String BASE_URL = "http://pls-test.post.kz";
 //    public static final String BASE_URL = "http://172.30.73.19:8088/";
-    public static final String BASE_URL = "http://172.30.73.113:8080/";
+//    public static final String BASE_URL = "http://172.30.73.113:8080/";
+    public static final String BASE_URL = "http://89.218.48.113:8080/";
 
 }

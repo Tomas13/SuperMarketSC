@@ -85,10 +85,10 @@ public class ScanActivity extends AppCompatActivity {
     private void initProgress() {
         mViewModel.getProgressState().observe(this, aBoolean -> {
             if (aBoolean) {
-                Log.d(TAG, "getProgress: " + aBoolean);
+//                Log.d(TAG, "getProgress: " + aBoolean);
                 showLoading("Загрузка");
             } else {
-                Log.d(TAG, "getProgress: " + aBoolean);
+//                Log.d(TAG, "getProgress: " + aBoolean);
                 hideLoading();
             }
         });
@@ -113,7 +113,7 @@ public class ScanActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btn_send:
                 if (isBarcode(etPostcode.getText().toString()) && isRow(etRow.getText().toString())) {
-                    mViewModel.netwo(etPostcode.getText().toString(), etRow.getText().toString());
+                    mViewModel.netwo(etPostcode.getText().toString().toUpperCase(), etRow.getText().toString().toUpperCase());
                 } else {
                     showToast("Неверно введен баркод или номер ячейки");
                 }

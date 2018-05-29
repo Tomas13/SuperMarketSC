@@ -76,14 +76,36 @@ public class Envelope {
 
         @Element(name = "Rcpn", required = false)
         String rcpn;
+
         @Element(name = "RcpnPhone", required = false)
         String rcpnPhone;
+
+        @Element(name = "RcpnEmail", required = false)
+        String rcpnEmail;
+
+        @Element(name = "SndrEmail", required = false)
+        String sndrEmail;
 
         @Element(name = "SndrPhone", required = false)
         String sndrPhone;
 
         @Element(name = "SndrIIN", required = false)
         String sndrIIN;
+
+        @Element(name = "RcpnIIN", required = false)
+        String rcpnIIN;
+
+        public String getSndrEmail() {
+            return sndrEmail;
+        }
+
+        public String getRcpnEmail() {
+            return rcpnEmail;
+        }
+
+        public String getRcpnIIN() {
+            return rcpnIIN;
+        }
 
         public String getSndr() {
             return sndr;

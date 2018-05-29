@@ -47,6 +47,7 @@ public class ScanViewModel extends ViewModel {
 
     public void netwo(String barcode, String shelfBarcode) {
 
+//        Timber.i("Barcode is " + barcode + " " + shelfBarcode);
 
         /*        envelopeMutableLiveData = */
         supermarketRepository.requestBarcodeInfo(barcode, new BarcodeInfoRequestCallback() {

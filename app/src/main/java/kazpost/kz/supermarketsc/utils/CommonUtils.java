@@ -43,7 +43,7 @@ public final class CommonUtils {
     }
 
     public static boolean isBarcode(String value) {
-        Pattern mPatternBar = Pattern.compile("^([A-Z]{2}[0-9]{9}[A-Z]{2})$");
+        Pattern mPatternBar = Pattern.compile("^([A-Za-z]{2}[0-9]{9}[A-Za-z]{2})$");
         Matcher matcher = mPatternBar.matcher(value);
 
         return matcher.find();
